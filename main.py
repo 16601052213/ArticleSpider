@@ -7,4 +7,8 @@ import os
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-execute(["scrapy", "crawl", "cnblogs"])
+# 博客园
+# execute(["scrapy", "crawl", "cnblogs"])
+
+# 知乎
+execute(["scrapy", "crawl", "zhihu"])
