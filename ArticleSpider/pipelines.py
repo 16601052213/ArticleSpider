@@ -131,26 +131,7 @@ class MysqlTwistedPipeline(object):
         print(failure)
 
     def do_insert(self, cursor, item):
-        inser_sql = """
-                    insert into cnblogs_article(title, url, url_object_id, front_image_path, front_image_url,
-                    parise_nums, comment_nums, fav_nums, tags, content, create_time)
-                    values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) on DUPLICATE KEY UPDATE parise_nums=VALUES(parise_nums),
-                    comment_nums=VALUES(comment_nums),fav_nums=VALUES(fav_nums),parise_nums=VALUES(parise_nums),
-                    create_time=VALUES(create_time)
-                """
-        params = list()
-        params.append(item.get("title", ""))
-        params.append(item.get("url", ""))
-        params.append(item.get("url_object_id", ""))
-        params.append(item.get("front_image_path", ""))
-        front_image = ",".join(item.get("front_image_url", []))
-        params.append(front_image)
-        params.append(item.get("parise_nums", 0))
-        params.append(item.get("comment_nums", 0))
-        params.append(item.get("fav_nums", 0))
-        params.append(item.get("tags", ""))
-        params.append(item.get("content", ""))
-        params.append(item.get("create_time", "1970-07-01"))
+        insert_sql, params = item.get_insert_sql()
 
-        cursor.execute(inser_sql, tuple(params))
+        cursor.execute(insert_sql, tuple(params))
 
