@@ -23,3 +23,15 @@ def extract_nums(value):
         nums = 0
 
     return nums
+
+
+def delete_douhao(num):
+    # 传入一个字符串将数字中的","去掉，提纯数字
+    while 1:
+        mm = re.search("\d,\d", num)
+        if mm:
+            mm = mm.group()
+            num = num.replace(mm, mm.replace(",", ""))
+        else:
+            break
+    return int(num)

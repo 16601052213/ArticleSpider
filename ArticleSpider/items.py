@@ -9,7 +9,7 @@ import re
 
 import scrapy
 from ArticleSpider.settings import SQL_DATETIME_FORMAT
-from ArticleSpider.utils.common import extract_nums
+from ArticleSpider.utils.common import extract_nums, delete_douhao
 from scrapy.loader import ItemLoader
 from scrapy.loader.processors import TakeFirst, Identity, MapCompose, Join
 
@@ -102,7 +102,7 @@ class ZhihuQuestionItem(scrapy.Item):
     crawl_time = scrapy.Field()
 
     def get_insert_sql(self):
-        #插入知乎question表的sql语句
+        # 插入知乎question表的sql语句
         insert_sql = """
             insert into zhihu_question(zhihu_id, topics, url, title, content, answer_num, comments_num,
               watch_user_num, click_num, crawl_time
@@ -120,11 +120,13 @@ class ZhihuQuestionItem(scrapy.Item):
         comments_num = extract_nums("".join(self["comments_num"]))
 
         if len(self["watch_user_num"]) == 2:
-            watch_user_num = int(self["watch_user_num"][0])
-            click_num = int(self["watch_user_num"][1])
+            watch_user_num = self["watch_user_num"][0]
+            click_num = self["watch_user_num"][1]
         else:
-            watch_user_num = int(self["watch_user_num"][0])
+            watch_user_num = self["watch_user_num"][0]
             click_num = 0
+        #数字中的逗号去掉
+        watch_user_num = delete_douhao(watch_user_num)
 
         crawl_time = datetime.datetime.now().strftime(SQL_DATETIME_FORMAT)
 
@@ -148,7 +150,7 @@ class ZhihuAnswerItem(scrapy.Item):
     crawl_time = scrapy.Field()
 
     def get_insert_sql(self):
-        #插入知乎question表的sql语句
+        # 插入知乎question表的sql语句
         insert_sql = """
             insert into zhihu_answer(zhihu_id, url, question_id, author_id, content, parise_num, comments_num,
               create_time, update_time, crawl_time
