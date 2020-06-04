@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import sys
 
 # Scrapy settings for ArticleSpider project
 #
@@ -28,14 +29,15 @@ ROBOTSTXT_OBEY = False
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-# DOWNLOAD_DELAY = 3
+RANDOMIZE_DOWNLOAD_DELAY = True
+DOWNLOAD_DELAY = 10
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-COOKIES_ENABLED = True
-COOKIES_DEBUG = True
+COOKIES_ENABLED = False
+COOKIES_DEBUG = False
 
 # Disable Telnet Console (enabled by default)
 # TELNETCONSOLE_ENABLED = False
@@ -97,8 +99,12 @@ ITEM_PIPELINES = {
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 IMAGES_URLS_FIELD = "front_image_url"
-project_dir = os.path.dirname(os.path.abspath(__file__))
+project_dir = os.path.abspath(os.path.dirname(__file__))
 IMAGES_STORE = os.path.join(project_dir, 'images')
+
+BASE_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+
+sys.path.insert(0, "C:/Users/Administrator/PycharmProjects/Envs/Scripts/ArticleSpider/ArticleSpider")
 
 # MYSQL_HOST = "120.26.186.100"
 # MYSQL_DBNAME = "article_spider"
