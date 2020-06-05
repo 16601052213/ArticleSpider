@@ -24,10 +24,12 @@ class CnblogsSpider(scrapy.Spider):
             post_url = post_node.css('h2 a::attr(href)').extract_first("")
             yield Request(url=parse.urljoin(response.url, post_url), meta={"front_image_url": image_url},
                           callback=self.parse_detail)
+            break
         # 提取下一页并交给scarpy进行下载
         next_url = response.xpath("//a[contains(text(), 'Next >')]/@href").extract_first("")
-        yield Request(url=parse.urljoin(response.url, next_url),
-                      callback=self.parse)
+        if next_url:
+            yield Request(url=parse.urljoin(response.url, next_url),
+                          callback=self.parse)
 
     def parse_detail(self, response):
         match_re_id = re.match(".*?(\d+)", response.url)
@@ -61,10 +63,8 @@ class CnblogsSpider(scrapy.Spider):
             item_loader.add_css("tags", ".news_tags a::text")
             item_loader.add_css("create_time", "#news_info .time::text")
             item_loader.add_value("url", response.url)
-            if response.meta.get("front_image_url"):
-                item_loader.add_value("front_image_url", response.meta.get("front_image_url"))
-
-            # article_item = item_loader.load_item()
+            if response.meta.get("front_image_url", []):
+                item_loader.add_value("front_image_url", response.meta.get("front_image_url", []))
 
             yield Request(url=parse.urljoin(response.url, "/NewsAjax/GetAjaxNewsInfo?contentId={}".format(post_id)),
                           meta={"article_item": item_loader, "url": response.url}, callback=self.parse_nums)
