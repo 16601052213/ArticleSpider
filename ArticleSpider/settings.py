@@ -64,6 +64,7 @@ COOKIES_DEBUG = False
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     'ArticleSpider.middlewares.RandomUserAgentMiddlware': 543,
+    # 'ArticleSpider.middlewares.RandomProxyMiddleware': 1,
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
 
 }

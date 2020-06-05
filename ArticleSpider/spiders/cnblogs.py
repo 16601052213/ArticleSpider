@@ -2,19 +2,31 @@
 import json
 import re
 from urllib import parse
+from pydispatch import dispatcher
 
 import scrapy
 from ArticleSpider.utils import common
-from scrapy import Request
+from scrapy import Request, signals
 from scrapy.loader import ItemLoader
 
 from ArticleSpider.items import CnblogsArticleItem, ArticleItemLoader
+from selenium import webdriver
 
 
 class CnblogsSpider(scrapy.Spider):
     name = 'cnblogs'
     allowed_domains = ['news.cnblogs.com']
     start_urls = ['http://news.cnblogs.com/']
+
+    def __init__(self):
+        self.browser = webdriver.Chrome(executable_path="C:/Users/Administrator/PycharmProjects/Envs/Scripts/chromedriver.exe")
+        super(CnblogsSpider, self).__init__()
+        dispatcher.connect(self.spider_closed, signals.spider_closed)
+
+    # def spider_closed(self, spider):
+    #     #当爬虫退出的时候关闭chrome
+    #     print ("spider closed")
+    #     self.browser.quit()
 
     def parse(self, response):
         post_nodes = response.css('div#news_list .news_block')
