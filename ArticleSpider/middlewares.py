@@ -117,9 +117,9 @@ class RandomUserAgentMiddlware(object):
         return cls(crawler)
 
     def process_request(self, request, spider):
-
         def get_ua():
             return getattr(self.ua, self.ua_type)
+
         request.headers.setdefault('User-Agent', get_ua())
 
 
@@ -129,14 +129,18 @@ class RandomProxyMiddleware(object):
         get_ip = GetIP()
         request.meta["proxy"] = get_ip.get_random_ip()
 
+
 from scrapy.http import HtmlResponse
+
+
 class JSPageMiddleware(object):
     # 通过chrome模拟登录
-    def process_request(self,request,spider):
+    def process_request(self, request, spider):
         if spider.name == "cnblogs":
             spider.browser.get(request.url)
             import time
             time.sleep(3)
             print("访问:{0}".format(request.url))
 
-            return HtmlResponse(url=spider.browser.current_url, body=spider.browser.page_source, encoding="utf-8", request=request)
+            return HtmlResponse(url=spider.browser.current_url, body=spider.browser.page_source, encoding="utf-8",
+                                request=request)
