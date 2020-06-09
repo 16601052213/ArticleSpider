@@ -33,8 +33,8 @@ ROBOTSTXT_OBEY = False
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
 
-RANDOMIZE_DOWNLOAD_DELAY = True
-DOWNLOAD_DELAY = 10
+# RANDOMIZE_DOWNLOAD_DELAY = True
+# DOWNLOAD_DELAY = 10
 
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
@@ -81,7 +81,8 @@ ITEM_PIPELINES = {
     # 'ArticleSpider.pipelines.ArticleImagePipeline': 1,
     # 'ArticleSpider.pipelines.JsonWithEncodingPipeline': 2,
     # 'ArticleSpider.pipelines.JsonExporterPipeline': 3,
-    'ArticleSpider.pipelines.MysqlTwistedPipeline': 4,
+    # 'ArticleSpider.pipelines.MysqlTwistedPipeline': 4,
+    'ArticleSpider.pipelines.ElasticsearchPipeline': 5,
     'ArticleSpider.pipelines.ArticlespiderPipeline': 300,
 }
 

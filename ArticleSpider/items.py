@@ -7,12 +7,20 @@
 import datetime
 import re
 
+import redis
 import scrapy
 from ArticleSpider.settings import SQL_DATETIME_FORMAT
 from ArticleSpider.utils.common import extract_nums, delete_douhao
 from scrapy.loader import ItemLoader
 from scrapy.loader.processors import TakeFirst, Identity, MapCompose, Join
 from w3lib.html import remove_tags
+from models.es_types import ArticleType, LagouJobType
+
+from elasticsearch_dsl.connections import connections
+es = connections.create_connection(ArticleType._doc_type.using)
+
+redis_cli = redis.StrictRedis()
+
 
 
 class ArticlespiderItem(scrapy.Item):
@@ -88,6 +96,28 @@ class CnblogsArticleItem(scrapy.Item):
 
         return insert_sql, params
 
+    def save_to_es(self):
+        article = ArticleType()
+        article.title = self['title']
+        article.create_time = self["create_time"]
+        article.content = remove_tags(self["content"])
+        article.front_image_url = self["front_image_url"]
+        if "front_image_path" in self:
+            article.front_image_path = self["front_image_path"]
+        article.praise_nums = self["praise_nums"]
+        article.fav_nums = self["fav_nums"]
+        article.comment_nums = self["comment_nums"]
+        article.url = self["url"]
+        article.tags = self["tags"]
+        article.meta.id = self["url_object_id"]
+
+        # article.suggest = gen_suggests(ArticleType._doc_type.index, ((article.title, 10), (article.tags, 7)))
+
+        article.save()
+
+        # redis_cli.incr("cnblogs_count")
+
+        return
 
 class ZhihuQuestionItem(scrapy.Item):
     # 知乎的问题item

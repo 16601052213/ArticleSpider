@@ -18,10 +18,10 @@ class CnblogsSpider(scrapy.Spider):
     allowed_domains = ['news.cnblogs.com']
     start_urls = ['http://news.cnblogs.com/']
 
-    def __init__(self):
-        self.browser = webdriver.Chrome(executable_path="C:/Users/Administrator/PycharmProjects/Envs/Scripts/chromedriver.exe")
-        super(CnblogsSpider, self).__init__()
-        dispatcher.connect(self.spider_closed, signals.spider_closed)
+    # def __init__(self):
+    #     self.browser = webdriver.Chrome(executable_path="C:/Users/Administrator/PycharmProjects/Envs/Scripts/chromedriver.exe")
+    #     super(CnblogsSpider, self).__init__()
+    #     dispatcher.connect(self.spider_closed, signals.spider_closed)
 
     # def spider_closed(self, spider):
     #     #当爬虫退出的时候关闭chrome
